@@ -5,6 +5,31 @@
 
 <PageTitle>Home</PageTitle>
 
+@if (cheeses is null)
+{
+    <p>Loading...</p>
+}
+else if (!cheeses.Any())
+{
+    <p>No cheeses found</p>
+}
+
+<div class="container">
+    <div class="d-flex justify-content-between flex-column flex-md-row mb-1">
+
+        //foreach //(var cheese in FilteredCheeses)
+        {
+            <div class="col">
+                <StoreItem Cheese="cheese" />
+            </div>
+        }
+        //if (!FilteredCheeses.Any())
+        {
+            <p>No cheeses found</p>     
+        }
+    </div>
+</div>
+
 @code {
     private IEnumerable<Cheese> cheeses;
 
