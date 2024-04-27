@@ -3,15 +3,43 @@
 @inject ProtectedSessionStorage ProtectedSessionStore
 @inject ShoppingCart ShoppingCart
 
-<div class="card" style="width: 18rem;">
+<div class="card h-100" style="border: 1px solid #e3e1b8">
   <img src="/img/cheeses/@Cheese.ImageUrl" class="card-img-top" alt="...">
-  <div class="card-body">
-    <h5 class="card-title">@Cheese.Name</h5>
+    <div class="card-body d-flex flex-column" style="background-color:#e3e1b8">
+        <h6>
+            <span class="badge text-bg-warning">@Cheese.Type</span>
+            <span class="badge text-bg-warning">@Cheese.Strength</span>
+        </h6>
+        <div class="d-flex flex-column flex-sm-row justify-content-between">
+        <h5 class="card-title">@Cheese.Name <span class="badge text-bg-warning">£@Cheese.Price</span></h5>
+        </div>
     <p class="card-text">@Cheese.Description</p>
+        <div class="mt-auto">
     <EditForm Model="quantity" OnSubmit="AddToCart">
-
+            <div class="row">
+                <div class="col-lg-6 col-12">
+                    <InputSelect class="form-select w-100" @bind-Value="quantity" required>
+                        @for (var i = 1; i <= 5; i++)
+                        {
+                            <option value="@i">@(i * 100)g</option>
+                        }
+                    </InputSelect>
+                </div>
+                <div class="col-lg-6 col-12 mt-lg-0 mt-1">
+                    <button class="btn btn-primary position-relative w-100">
+                        Add to cart
+                        @if (ShoppingCart.GetQuantity(Cheese) > 0)
+                        {
+                            <span class="position-absolute top-0 start-100 translate-middle badge bg-danger">
+                                @(ShoppingCart.GetQuantity(Cheese) * 100)g
+                                <span class="visually-hidden">@Cheese.Name in shopping cart</span>
+                            </span>
+                        }
+                    </button>
+                </div>
+            </div>
     </EditForm>
-    <a href="#" class="btn btn-primary">Add to cart</a>
+    </div>
   </div>
 </div>
 
