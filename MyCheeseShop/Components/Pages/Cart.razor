@@ -1,5 +1,8 @@
 ﻿@page "/cart"
+@using MyCheeseShop.Components.Shared
+@using MyCheeseShop.Context
 @using MyCheeseShop.Model
+@inject CheeseProvider CheeseProvider
 @inject ShoppingCart ShoppingCart
 @inject NavigationManager NavigationManager
 
@@ -21,7 +24,7 @@ else
             <h3>Shopping Cart</h3>
         </div>
         <div>
-            <a @onclick="GoToCheckout" class="btn btn-outline-primary">Checkout</a>
+            <a @onclick="GoToCheckout" class="btn btn-outline-dark">Checkout</a>
         </div>
     </div>
 

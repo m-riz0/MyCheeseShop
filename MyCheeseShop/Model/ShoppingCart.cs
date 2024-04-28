@@ -16,7 +16,7 @@
             if (item == null)
                 _items.Add(new CartItem { Cheese = cheese, Quantity = quantity });
             else
-                item.Quantity = quantity;
+                item.Quantity += quantity;
 
             OnCartUpdated?.Invoke();
         }

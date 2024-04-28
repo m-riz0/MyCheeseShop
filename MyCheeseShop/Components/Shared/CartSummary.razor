@@ -4,6 +4,61 @@
 @inject NavigationManager NavigationManager
 @inject ProtectedSessionStorage ProtectedSessionStore
 
+<div>
+    <div class="row">
+        <div class="col">
+            <h4>Name</h4>
+        </div>
+        <div class="col">
+            <h4>Price</h4>
+        </div>
+        <div class="col">
+            <h4>Quantity</h4>
+        </div>
+        <div class="col">
+            <h4>Total</h4>
+        </div>
+        @if (IsEditable)
+        {
+            <div class="col">
+                <h4>Actions</h4>
+            </div>
+        }
+    </div>
+    @foreach (var item in ShoppingCart.GetItems())
+    {
+        <div class="row">
+            <div class="col">
+                @item.Cheese.Name
+            </div>
+            <div class="col">
+                £@item.Cheese.Price
+            </div>
+            <div class="col">
+                @(item.Quantity * 100)g
+            </div>
+            <div class="col">
+                £@item.Total
+            </div>
+            @if (IsEditable)
+            {
+                <div class="col">
+                    <button class="btn btn-outline-success mt-1 mt-md-0" @onclick="() => IncreaseQuantity(item)">Add</button>
+                    <button class="btn btn-outline-primary mt-1 mt-md-0" @onclick="() => DecreaseQuantity(item)">Remove</button>
+                    <button class="btn btn-outline-danger mt-1 mt-md-0" @onclick="() => RemoveItem(item)">Delete</button>
+                </div>
+            }
+        </div>
+    }
+</div>
+<div class="d-flex justify-content-between">
+    <div>
+        <button @onclick="GoToStore" class="btn btn-outline-dark">Back to cheeses</button>
+    </div>
+    <div>
+        <h4>Total: £@(ShoppingCart.Total())</h4>
+    </div>
+</div>
 
 
 @code {
@@ -14,7 +69,7 @@
     {
         ShoppingCart.OnCartUpdated += async () => await CartUpdated();
     }
-
+    
     private async Task CartUpdated()
     {
         StateHasChanged();
@@ -34,5 +89,10 @@
     private void DecreaseQuantity(CartItem item)
     {
         ShoppingCart.RemoveItem(item.Cheese, 1);
+    }
+
+    private void GoToStore()
+    {
+        NavigationManager.NavigateTo("/");
     }
 }
