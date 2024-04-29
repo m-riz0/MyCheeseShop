@@ -1,0 +1,37 @@
+﻿@page "/checkout"
+@using Microsoft.AspNetCore.Authorization
+@using Microsoft.AspNetCore.Components.Authorization
+@using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MyCheeseShop.Context
+@using MyCheeseShop.Model
+@using System.ComponentModel.DataAnnotations
+@attribute [Authorize]
+@inject OrderProvider OrderProvider
+@inject ShoppingCart ShoppingCart
+@inject NavigationManager NavigationManager
+@inject ProtectedSessionStorage ProtectedSessionStore
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+<body style="background-color:#faf5b6">
+<PageTitle>MyCheeseShop - Checkout</PageTitle>
+
+<h3>Checkout</h3>
+
+</body>
+
+@code {
+
+
+
+    private sealed class PaymentDetails
+    {
+        [Required]
+        public string NameOnCard { get; set; }
+        [Required]
+        public string CardNumber { get; set; }
+        [Required]
+        public string ExpiryDate { get; set; }
+        [Required]
+        public string SecurityCode { get; set; }
+    }
+}

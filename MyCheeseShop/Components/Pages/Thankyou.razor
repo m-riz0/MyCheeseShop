@@ -1,0 +1,35 @@
+﻿@page "/thankyou"
+@attribute [Authorize]
+@inject NavigationManager NavigationManager
+
+
+<body style="background-color:#faf5b6">
+<PageTitle>MyCheeseShop - Thank You</PageTitle>
+
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-6">
+                <div class="card" style="border: 1px solid #e3e1b8">
+                    <div class="card-header bg-dark" style="color:#e3e1b8">
+                        <h2 class="text-center">Thank You!</h2>
+                    </div>
+                    <div class="card-body" style="background-color:#e3e1b8">
+                        <h5 class="text-center">Thank you for shopping with MyCheeseShop!</h5>
+                        <p></p>
+                        <h5 class="text-center">Your order has been successfully placed.</h5>
+                    </div>
+                    <div class="card-footer text-center" style="background-color:#e3e1b8">
+                        <button onclick="goToStore()" class="btn btn-outline-dark btn-block">Back to the cheeses</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+@code {
+    private void GoToStore()
+    {
+        NavigationManager.NavigateTo("/");
+    }
+}
