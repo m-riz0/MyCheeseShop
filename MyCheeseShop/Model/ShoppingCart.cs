@@ -65,5 +65,11 @@
             _items = items.ToList();
             OnCartUpdated?.Invoke();
         }
+
+        public void Clear()
+        {
+            _items.Clear();
+            OnCartUpdated?.Invoke();
+        }
     }
 }

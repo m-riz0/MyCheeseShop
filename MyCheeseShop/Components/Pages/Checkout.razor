@@ -2,6 +2,7 @@
 @using Microsoft.AspNetCore.Authorization
 @using Microsoft.AspNetCore.Components.Authorization
 @using Microsoft.AspNetCore.Components.Server.ProtectedBrowserStorage
+@using MyCheeseShop.Components.Shared
 @using MyCheeseShop.Context
 @using MyCheeseShop.Model
 @using System.ComponentModel.DataAnnotations
@@ -16,12 +17,43 @@
 <PageTitle>MyCheeseShop - Checkout</PageTitle>
 
 <h3>Checkout</h3>
+    <div class="card mb-1" style="border: 1px solid #e3e1b8">
+        <div class="card-body" style="background-color:#e3e1b8">
+        <h4 class="card-title">Order Summary</h4>
+        <CartSummary />
+    </div>
+</div>
 
+     
 </body>
 
 @code {
+    private User user;
+    private PaymentDetails paymentDetails;
+    private EditContext editContext;
+    private bool isPaying;
 
+    private async Task MakePayment()
+    {
+        await SimulatePayment();
+        await OrderProvider.CreateOrder(user, ShoppingCart.GetItems());
+        ShoppingCart.Clear();
+        NavigationManager.NavigateTo("/thankyou");
+    }
 
+    private async Task SimulatePayment()
+    {
+        isPaying = true;
+        StateHasChanged();
+        await Task.Delay(2000);
+        isPaying = false;
+        StateHasChanged();
+    }
+
+    private void GoToCart()
+    {
+        NavigationManager.NavigateTo("/cart");
+    }
 
     private sealed class PaymentDetails
     {
