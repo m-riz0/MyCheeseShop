@@ -8,6 +8,7 @@
 @using System.ComponentModel.DataAnnotations
 @attribute [Authorize]
 @inject OrderProvider OrderProvider
+@inject UserProvider UserProvider
 @inject ShoppingCart ShoppingCart
 @inject NavigationManager NavigationManager
 @inject ProtectedSessionStorage ProtectedSessionStore
@@ -24,6 +25,68 @@
     </div>
 </div>
 
+<EditForm EditContext="editContext" OnValidSubmit="MakePayment">
+    <DataAnnotationsValidator />
+    <div class="row justify-content-center mb-2">
+        <div class="col-lg-6 col-12 mt-1">
+                <div class="card h-100" style="border: 1px solid #e3e1b8">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                    <h4 class="card-title">Customer</h4>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Name</label>
+                        <input class="form-control" value="@GetFormattedName(user)" disabled />
+                    </div>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Address</label>
+                        <textarea class="form-control" rows="3" style="resize: none" value="@GetFormattedAddress(user)" disabled />
+                    </div>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Email</label>
+                        <input class="form-control" value="@user.Email" disabled />
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+        <div class="row justify-content-center mb-3">
+        <div class="col-lg-6 col-12 mt-lg-1 mt-2">
+                <div class="card h-100" style="border: 1px solid #e3e1b8">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                    <h4 class="card-title">Payment</h4>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Card Name</label>
+                        <InputText class="form-control" placeholder="@GetFormattedName(user)" @bind-Value="paymentDetails.NameOnCard" />
+                    </div>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Card number</label>
+                        <InputText class="form-control" placeholder="0000-0000-0000-0000" @bind-Value="paymentDetails.CardNumber" />
+                    </div>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Expiry Date</label>
+                        <InputText class="form-control" placeholder="00/00" @bind-Value="paymentDetails.ExpiryDate"  />
+                    </div>
+                    <div class="form-group mb-1">
+                        <label class="form-label">Security Code</label>
+                        <InputText class="form-control" placeholder="000" @bind-Value="paymentDetails.SecurityCode" />
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+
+        <div class="row justify-content-center mb-3">
+            <div class="col-lg-6 col-12 d-flex justify-content-center">
+                <button @onclick="GoToCart" class="btn btn-warning mr-2">Back to Cart</button>
+                <button type="submit" class="btn btn-danger" style="margin-left: 16px">
+                    @if (isPaying)
+                    {
+                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                    }
+                    <span>Pay and continue</span>
+                </button>
+            </div>
+        </div>
+</EditForm>
 </body>
 
 @code {
@@ -31,6 +94,16 @@
     private PaymentDetails paymentDetails;
     private EditContext editContext;
     private bool isPaying;
+
+    protected override async Task OnInitializedAsync()
+    {
+        paymentDetails = new PaymentDetails();
+        editContext = new EditContext(paymentDetails);
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var username = authState!.User!.Identity!.Name!;
+        user = UserProvider.GetUserByUsername(username)!;
+    }
 
     private async Task MakePayment()
     {
@@ -44,7 +117,7 @@
     {
         isPaying = true;
         StateHasChanged();
-        await Task.Delay(2000);
+        await Task.Delay(1000);
         isPaying = false;
         StateHasChanged();
     }
@@ -52,6 +125,16 @@
     private void GoToCart()
     {
         NavigationManager.NavigateTo("/cart");
+    }
+
+    private string GetFormattedName(User user)
+    {
+        return $"{user.FirstName} {user.LastName}";
+    }
+
+    private string GetFormattedAddress(User user)
+    {
+        return $"{user.Address}{Environment.NewLine}{user.City}{Environment.NewLine}{user.PostCode}";
     }
 
     private sealed class PaymentDetails
