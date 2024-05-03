@@ -77,12 +77,12 @@
         <div class="row justify-content-center mb-3">
             <div class="col-lg-6 col-12 d-flex justify-content-center">
                 <button @onclick="GoToCart" class="btn btn-warning mr-2">Back to Cart</button>
-                <button type="submit" class="btn btn-danger" style="margin-left: 16px">
+                <button type="submit" class="btn btn-danger d-flex align-items-center" style="margin-left: 16px">
+                    <span>Pay and continue</span>
                     @if (isPaying)
                     {
-                        <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                        <span class="spinner-grow spinner-grow-sm float-end" style="margin-left: 4px" aria-hidden="true"></span>
                     }
-                    <span>Pay and continue</span>
                 </button>
             </div>
         </div>
@@ -117,7 +117,7 @@
     {
         isPaying = true;
         StateHasChanged();
-        await Task.Delay(1000);
+        await Task.Delay(1500);
         isPaying = false;
         StateHasChanged();
     }
