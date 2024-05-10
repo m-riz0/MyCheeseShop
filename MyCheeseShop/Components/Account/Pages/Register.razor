@@ -16,41 +16,91 @@
 @inject IdentityRedirectManager RedirectManager
 
 <body style="background-color:#faf5b6">
-<PageTitle>Register</PageTitle>
+<PageTitle>MyCheeseShop - Register</PageTitle>
 <StatusMessage Message="@statusMessage" IsError="@isError" />
 
-<div class="container">
-    <div class="row justify-content-center mt-5">
-        <div class="col-md-6">
-            <div class="card" style="border: 2px solid #e3e1b8">
+<EditForm OnValidSubmit="RegisterUser" Model="Model" FormName="registerForm">
+    <DataAnnotationsValidator />
+
+        <div class="row justify-content-center mb-1 mt-5">
+            <div class="col-md-6">
+                <div class="card h-100" style="border: 2px solid #e3e1b8">
                     <div class="card-body" style="background-color:#e3e1b8">
-                    <h4 class="card-title text-center">Register</h4>
-                    <EditForm OnValidSubmit="RegisterUser" Model="Model" FormName="registerForm">
+                        <h5 class="card-title text-center">About you</h5>
                         <div class="mb-3">
-                            <label for="email" class="form-label">Email</label>
-                            <InputText class="form-control" placeholder="Email" @bind-Value="Model.Email" />
-                        </div>
-                        <div class="row g-3">
-                            <div class="mb-3">
-                                <label for="password" class="form-label">Password</label>
-                                <InputText type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
+                            <label for="firstname">First Name</label>
+                            <InputText id="firstname" class="form-control" placeholder="First Name" @bind-Value="Model.FirstName" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.FirstName)" />
                             </div>
                         </div>
-                        <div class="row g-4">
-                            <div class="mb-3">
-                                <label for="name" class="form-label">Confirm Password</label>
-                                <InputText type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
+                        <div class="mb-3">
+                            <label for="lastname">Last Name</label>
+                            <InputText id="lastname" class="form-control" placeholder="Last Name" @bind-Value="Model.LastName" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.LastName)" />
                             </div>
                         </div>
-                        <div class="d-grid gap-2 mb-3">
-                            <button type="submit" class="btn btn-warning">Register</button>
+                        <div class="mb-3">
+                            <label for="street">Street</label>
+                            <InputText id="street" class="form-control" placeholder="Street" @bind-Value="Model.Address" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.Address)" />
+                            </div>
                         </div>
-                    </EditForm>
+                        <div class="mb-3">
+                            <label for="city">City</label>
+                            <InputText id="city" class="form-control" placeholder="City" @bind-Value="Model.City" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.City)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="postcode">Post Code</label>
+                            <InputText id="postcode" class="form-control" placeholder="Post Code" @bind-Value="Model.PostCode" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.PostCode)" />
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
-    </div>
-</div>
+            <p></p>
+        <div class="row justify-content-center mb-2">
+            <div class="col-md-6">
+                <div class="card h-100" style="border: 2px solid #e3e1b8;">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                        <h5 class="card-title text-center">Login details</h5>
+                        <div class="mb-3">
+                            <label for="email">Email</label>
+                            <InputText id="email" class="form-control" placeholder="you@example.com" @bind-Value="Model.Email" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.Email)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="password">Password</label>
+                            <InputText id="password" type="password" class="form-control" placeholder="Password" @bind-Value="Model.Password" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.Password)" />
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="confirm">Confirm Password</label>
+                            <InputText id="confirm" type="password" class="form-control" placeholder="Confirm Password" @bind-Value="Model.ConfirmPassword" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model!.ConfirmPassword)" />
+                            </div>
+                        </div>
+                        <div class="d-grid gap-2 mb-3">
+                            <button type="submit" class="btn bg-warning w-100">Register</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </EditForm>
 </body>
 
 @code {
