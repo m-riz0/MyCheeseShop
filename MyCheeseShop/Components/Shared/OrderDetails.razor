@@ -1,0 +1,27 @@
+﻿@using MyCheeseShop.Model
+
+@if (Order is null)
+{
+    <p>Select an order...</p>
+}
+else
+{
+    
+}
+
+@code {
+    [Parameter]
+    public Order? Order { get; set; }
+
+    private string GetStatusColour(OrderStatus status)
+    {
+        return status switch
+        {
+            OrderStatus.Placed => "bg-primary",
+            OrderStatus.Dispatched => "bg-success",
+            OrderStatus.Cancelled => "bg-danger",
+            _ => "bg-secondary"
+        };
+    }
+
+}

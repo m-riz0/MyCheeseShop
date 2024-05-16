@@ -7,6 +7,7 @@
         public List<OrderItem> Items { get; set;}
         public DateTime Created { get; set; }
         public OrderStatus Status { get; set; }
+        public decimal Total => Items.Sum(item => item.Cheese.Price * item.Quantity);
     }
 }
 

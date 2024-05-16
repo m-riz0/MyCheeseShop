@@ -1,8 +1,13 @@
 ﻿@page "/allorders"
 @attribute [Authorize(Roles = "Admin")]
 @inject OrderProvider OrderProvider
+@inject UserProvider UserProvider
+@inject NavigationManager NavigationManager
+@inject IJSRuntime Js
 
 <PageTitle>MyCheeseShop - All Orders</PageTitle>
+
+
 
 @code {
 
