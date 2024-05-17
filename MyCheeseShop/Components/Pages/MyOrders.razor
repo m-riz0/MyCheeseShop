@@ -1,4 +1,5 @@
 ﻿@page "/myorders"
+@using MyCheeseShop.Components.Shared
 @inject OrderProvider OrderProvider
 @inject UserProvider UserProvider
 @inject AuthenticationStateProvider AuthenticationStateProvider
@@ -7,7 +8,7 @@
 <PageTitle>MyCheeseShop - My Orders</PageTitle>
 
 <body style="background-color:#faf5b6">
-<h3>Orders</h3>
+<h3>My Orders</h3>
 
 @if (orders is null)
 {
@@ -34,7 +35,7 @@ else
                                     <p class="card-text">Ordered: @order.Created.ToString("dd MMMM yyyy")</p>
                                     <p class="card-text hide-on-small">Status: @order.Status.ToString()</p>
                                     <p class="card-text">Total: @order.Total.ToString("C")</p>
-                                    <button class="btn btn-primary" @onclick="() => ShowDetails(order)">Show Details</button>
+                                    <button class="btn btn-warning" @onclick="() => ShowDetails(order)">Show Details</button>
                                 </div>
                             </div>
                         </div>

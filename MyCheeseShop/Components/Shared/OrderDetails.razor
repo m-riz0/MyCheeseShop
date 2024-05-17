@@ -6,7 +6,35 @@
 }
 else
 {
-    
+    <div class="card" style="background-color:#e3e1b8; border: 4px solid #faf5b6">
+        <div class="card-header text-center">
+            <div>
+                <h5><span class="badge text-bg-success">Order: @Order.Id</span></h5>
+                <h5><span class="badge text-bg-dark">@Order.Created.ToString("U")</span></h5>
+                <h5><span class="badge @GetStatusColour(Order.Status)">@Order.Status.ToString()</span></h5>
+                <h5><span class="badge text-bg-info">@($"{Order.User.FirstName} {Order.User.LastName}")</span></h5>
+                <h5><span class="badge text-bg-warning">@($"{Order.User.Address}, {Order.User.City}, {Order.User.PostCode}")</span></h5>
+                <h5><span class="badge text-bg-danger">Total: @Order.Total.ToString("C")</span></h5>
+            </div>
+        </div>
+    </div>
+    <p></p>
+    <ul class="list-group list-group-flush">
+        @foreach (OrderItem item in Order.Items)
+        {
+            <li class="list-group-item" style="background-color:#e3e1b8; border: 4px solid #faf5b6">
+                <div class="card-container">
+                    <img src="/img/cheeses/@item.Cheese.ImageUrl" class="img-thumbnail card-img-left" alt="@item.Cheese.Name" style="background-color:#e3e1b8">
+                    <div class="card-body-flex" style="background-color:#e3e1b8">
+                        <h5 class="card-title">@item.Cheese.Name</h5>
+                        <p class="card-text">Quantity: @(item.Quantity * 100)g</p>
+                        <p class="card-text">Price: @item.Cheese.Price.ToString("C") per 100g</p>
+                        <h6 class="card-text">Total: @item.Total.ToString("C")</h6>
+                    </div>
+                </div>
+            </li>
+        }
+    </ul>
 }
 
 @code {
@@ -23,5 +51,4 @@ else
             _ => "bg-secondary"
         };
     }
-
 }

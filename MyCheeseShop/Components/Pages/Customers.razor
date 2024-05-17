@@ -1,0 +1,20 @@
+﻿@page "/customers"
+@using Microsoft.AspNetCore.Identity
+@attribute [Authorize(Roles = "Admin")]
+@inject UserProvider UserProvider
+@inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
+@inject IJSRuntime Js
+
+
+<body style="background-color:#faf5b6">
+<PageTitle>MyCheeseShop - Customers</PageTitle>
+
+<h3>Customers</h3>
+
+
+</body>
+
+@code {
+
+}
