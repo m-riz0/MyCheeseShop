@@ -19,6 +19,8 @@ builder.Services.AddScoped<ShoppingCart>();
 builder.Services.AddScoped<CheeseProvider>();
 builder.Services.AddScoped<OrderProvider>();
 builder.Services.AddScoped<UserProvider>();
+builder.Services.AddScoped<FileUploader>();
+
 
 builder.Services.AddAuthentication(options =>
 {
