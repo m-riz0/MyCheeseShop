@@ -7,77 +7,82 @@
 
 <EditForm Model="@Model" OnValidSubmit="@HandleSubmit">
     <DataAnnotationsValidator />
-    <div class="row">
-        <div class="col-lg-6 col-12 mt-1">
-            <div class="card h-100">
-                <div class="card-body bg-light d-flex flex-column">
-                    <h4 class="card-title">Cheese details</h4>
-
-                    <div class="form-group mb-2">
-                        <label for="name">Name</label>
-                        <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Name" />
-                        <div class="small">
-                            <ValidationMessage For="@(() => Model.Name)" />
-                        </div>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="type">Type</label>
-                        <InputText id="type" class="form-control" @bind-Value="@Model.Type" placeholder="Type" />
-                        <div class="small">
-                            <ValidationMessage For="@(() => Model.Type)" />
-                        </div>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="description">Description</label>
-                        <InputTextArea id="description" class="form-control" @bind-Value="@Model.Description" rows="5" placeholder="Add a description..." />
-                        <div class="small">
-                            <ValidationMessage For="@(() => Model.Description)" />
-                        </div>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="strength">Strength</label>
-                        <InputText id="strength" class="form-control" @bind-Value="@Model.Strength" placeholder="Strength" />
-                        <div class="small">
-                            <ValidationMessage For="@(() => Model.Strength)" />
-                        </div>
-                    </div>
-                    <div class="form-group mb-2">
-                        <label for="price">Price</label>
-                        <div class="input-group">
-                            <span class="input-group-text">£</span>
-                            <InputNumber id="price" class="form-control" @bind-Value="@Model.Price" placeholder="9.99" min="0.01" max="10000.00" step="0.01" />
+    <div class="container">
+        <div class="row">
+            <div class="col-12 mt-1">
+                <div class="card" style="border: 1px solid #e3e1b8">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                        <h4 class="card-title">Details</h4>
+                        <div class="form-group mb-2">
+                            <label for="name">Name</label>
+                            <InputText id="name" class="form-control" @bind-Value="@Model.Name" placeholder="Name" />
                             <div class="small">
-                                <ValidationMessage For="@(() => Model.Price)" />
+                                <ValidationMessage For="@(() => Model.Name)" />
                             </div>
                         </div>
-
-
-                    </div>
-                    <div class="mt-auto">
-                        <button type="submit" class="btn btn-outline-primary w-100">🧀 @(Cheese is null ? "Add cheese" : "Update cheese")</button>
+                        <div class="form-group mb-2">
+                            <label for="type">Type</label>
+                            <InputText id="type" class="form-control" @bind-Value="@Model.Type" placeholder="Type" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model.Type)" />
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="description">Description</label>
+                            <InputTextArea id="description" class="form-control" @bind-Value="@Model.Description" rows="5" placeholder="Description" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model.Description)" />
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="strength">Strength</label>
+                            <InputText id="strength" class="form-control" @bind-Value="@Model.Strength" placeholder="Strength" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model.Strength)" />
+                            </div>
+                        </div>
+                        <div class="form-group mb-2">
+                            <label for="price">Price</label>
+                            <div class="input-group">
+                                <span class="input-group-text">£</span>
+                                <InputNumber id="price" class="form-control" @bind-Value="@Model.Price" placeholder="9.99" min="0.01" max="10000.00" step="0.01" />
+                                <div class="small">
+                                    <ValidationMessage For="@(() => Model.Price)" />
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col-lg-6 col-12 mt-1">
-            <div class="card h-100">
-                <div class="card-body bg-light d-flex flex-column">
-                    <h4 class="card-title">Cheese image</h4>
-                    <div class="form-group mb-2">
-                        <InputFile id="imageUrl" class="form-control" @bind-Value="@Model.ImageUrl" OnChange="LoadFile" />
-                        <div class="small">
-                            <ValidationMessage For="@(() => Model.ImageUrl)" />
+        
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card" style="border: 1px solid #e3e1b8">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                        <h4 class="card-title">Image</h4>
+                        <div class="form-group mb-2">
+                            <InputFile id="imageUrl" class="form-control" @bind-Value="@Model.ImageUrl" OnChange="LoadFile" />
+                            <div class="small">
+                                <ValidationMessage For="@(() => Model.ImageUrl)" />
+                            </div>
+                        </div>
+                        <div class="mb-2 text-center">
+                            <img src="/img/cheeses/@Model.ImageUrl" class="img-thumbnail" alt="@Model.Name" onerror="this.onerror = null; this.src='/img/no_cheese.png'" style="background-color:#e3e1b8">
                         </div>
                     </div>
-                    <div class="mb-2">
-                        <img src="/img/cheeses/@Model.ImageUrl" class="img-thumbnail" alt="@Model.Name" onerror="this.onerror = null; this.src='/img/no_cheese.png'">
-                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="d-flex justify-content-center">
+                    <button type="submit" class="btn btn-warning w-50"> @(Cheese is null ? "Add cheese" : "Update cheese")</button>
                 </div>
             </div>
         </div>
     </div>
 </EditForm>
-
 
 @code {
     [Parameter]

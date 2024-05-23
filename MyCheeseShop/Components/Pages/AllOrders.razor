@@ -1,4 +1,4 @@
-﻿@page "/allorders/{UserId?}"
+﻿@page "/allorders"
 @attribute [Authorize(Roles = "Admin")]
 @inject OrderProvider OrderProvider
 @inject UserProvider UserProvider
@@ -10,87 +10,8 @@
 <body style="background-color:#faf5b6">
 <h3>All Orders - (Admin)</h3>
 
-@if (user is not null)
-{
-        
-}
-
 </body>
 
 @code {
-    private IEnumerable<Order>? orders;
-    private OrderStatus selectedFlilter = OrderStatus.None;
 
-    private IEnumerable<Order>? FilteredOrders => orders?.Where(order => selectedFlilter switch
-    {
-        OrderStatus.Placed => order.Status == OrderStatus.Placed,
-        OrderStatus.Dispatched => order.Status == OrderStatus.Dispatched,
-        OrderStatus.Cancelled => order.Status == OrderStatus.Cancelled,
-        _ => true
-    });
-
-    private Order? selectedOrder;
-
-    [Parameter]
-    public string UserId { get; set; }
-
-    private User? user;
-
-    protected async override Task OnInitializedAsync()
-    {
-        if (!string.IsNullOrWhiteSpace(UserId))
-        {
-            user = await UserProvider.GetUserByIdAsync(UserId);
-            orders = await OrderProvider.GetOrdersAsync(user);
-        }
-        else
-        {
-            orders = await OrderProvider.GetAllOrdersAsync();
-        }
-
-        selectedOrder = FilteredOrders?.FirstOrDefault();
-    }
-
-    private void ShowDetails(Order order)
-    {
-        selectedOrder = order;
-    }
-
-    private async Task DispatchOrder(Order order)
-    {
-        await OrderProvider.DispatchOrder(order);
-    }
-
-    private async Task CancelOrder(Order order)
-    {
-        await OrderProvider.CancelOrder(order);
-    }
-
-    private void FilterOrders(OrderStatus status)
-    {
-        selectedFlilter = status;
-        selectedOrder = FilteredOrders?.FirstOrDefault();
-    }
-
-    private string GetCellColour(OrderStatus status)
-    {
-        return status switch
-        {
-            OrderStatus.Placed => "table-primary",
-            OrderStatus.Dispatched => "table-success",
-            OrderStatus.Cancelled => "table-danger",
-            _ => ""
-        };
-    }
-
-    private void GoToCustomers()
-    {
-        NavigationManager.NavigateTo("/customers");
-    }
-
-    protected override async Task OnAfterRenderAsync(bool firstRender)
-    {
-        if (firstRender)
-            await Js.InvokeVoidAsync("addTooltips");
-    }
 }
