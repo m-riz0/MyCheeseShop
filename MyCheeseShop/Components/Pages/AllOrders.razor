@@ -1,8 +1,10 @@
-﻿@page "/allorders"
+﻿@page "/allorders/{UserId?}"
+@using MyCheeseShop.Components.Shared
 @attribute [Authorize(Roles = "Admin")]
 @inject OrderProvider OrderProvider
 @inject UserProvider UserProvider
 @inject NavigationManager NavigationManager
+@inject AuthenticationStateProvider AuthenticationStateProvider
 @inject IJSRuntime Js
 
 <PageTitle>MyCheeseShop - All Orders</PageTitle>
@@ -10,8 +12,155 @@
 <body style="background-color:#faf5b6">
 <h3>All Orders - (Admin)</h3>
 
+@if (orders is null)
+{
+    <p>Loading...</p>
+}
+else if (!orders.Any())
+{
+    <p>No orders found</p>
+}
+else
+{
+        <div class="row">
+            <div class="col-lg-6 col-12 mt-1">
+                <div class="card h-100" style="border: 1px solid #e3e1b8">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                        <div class="d-flex justify-content-center card-title flex-column">
+                            <div class="btn-group" role="group" aria-label="Order status filters">
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnAll" autocomplete="off" checked @onclick="() => FilterOrders(OrderStatus.None)">
+                                <label class="btn btn-outline-secondary order-filter btn-sm" for="btnAll">All</label>
+
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnPlaced" autocomplete="off" @onclick="() => FilterOrders(OrderStatus.Placed)">
+                                <label class="btn btn-outline-primary order-filter btn-sm" for="btnPlaced">Placed</label>
+
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnDispatched" autocomplete="off" @onclick="() => FilterOrders(OrderStatus.Dispatched)">
+                                <label class="btn btn-outline-success order-filter btn-sm" for="btnDispatched">Dispatched</label>
+
+                                <input type="radio" class="btn-check" name="btnRadio" id="btnCancelled" autocomplete="off" @onclick="() => FilterOrders(OrderStatus.Cancelled)">
+                                <label class="btn btn-outline-danger order-filter btn-sm" for="btnCancelled">Cancelled</label>
+                            </div>
+                        </div>
+                        <div class="orders-list">
+                            @foreach (var order in FilteredOrders!)
+                            {
+                                <div class="card mb-3" style="background-color:#e3e1b8; border: 4px solid #faf5b6">
+                                    <div class="card-body">
+                                        <div class="order-info">
+                                            <h5 class="@GetCellColour(order.Status)">Order ID: @order.Id</h5>
+                                            <p>Ordered: @order.Created.ToString("dd MMMM yyyy")</p>
+                                            <p class="hide-on-small">User: <span data-bs-toggle="tooltip" data-bs-placement="bottom" title="@order.User.Email">@($"{order.User.FirstName} {order.User.LastName}")</span></p>
+                                            <p>Total: @order.Total.ToString("C")</p>
+                                        </div>
+                                        <div class="order-actions mt-3 d-flex justify-content-between align-items-end">
+                                            <button class="btn btn-warning me-1" @onclick="() => ShowDetails(order)">Show Details</button>
+                                            @if (order.Status == OrderStatus.Placed)
+                                            {
+                                                <div>
+                                                    <button class="btn btn-success me-1" @onclick="() => DispatchOrder(order)">Dispatch Order</button>
+                                                    <button class="btn btn-danger" @onclick="() => CancelOrder(order)">Cancel Order</button>
+                                                </div>
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                            @if (!FilteredOrders.Any())
+                            {
+                                <div class="alert alert-warning" role="alert">
+                                    No orders found
+                                </div>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 col-12 mt-1">
+                <div class="card h-100" style="border: 1px solid #e3e1b8">
+                    <div class="card-body" style="background-color:#e3e1b8">
+                        <h4 class="card-title">Details</h4>
+                        <OrderDetails Order="selectedOrder" />
+                    </div>
+                </div>
+            </div>
+        </div>
+}
 </body>
 
 @code {
+    private IEnumerable<Order>? orders;
+    private OrderStatus selectedFilter = OrderStatus.None;
 
+    private IEnumerable<Order>? FilteredOrders => orders?.Where(order => selectedFilter switch
+    {
+        OrderStatus.Placed => order.Status == OrderStatus.Placed,
+        OrderStatus.Dispatched => order.Status == OrderStatus.Dispatched,
+        OrderStatus.Cancelled => order.Status == OrderStatus.Cancelled,
+        _ => true
+    });
+
+    private Order? selectedOrder;
+
+    [Parameter]
+    public string UserId { get; set; }
+
+    private User? user;
+
+    protected async override Task OnInitializedAsync()
+    {
+        if (!string.IsNullOrWhiteSpace(UserId))
+        {
+            user = await UserProvider.GetUserByIdAsync(UserId);
+            orders = await OrderProvider.GetOrdersAsync(user);
+        }
+        else
+        {
+            orders = await OrderProvider.GetAllOrdersAsync();
+        }
+
+        selectedOrder = FilteredOrders?.FirstOrDefault();
+    }
+
+    private void ShowDetails(Order order)
+    {
+        selectedOrder = order;
+    }
+
+    private async Task DispatchOrder(Order order)
+    {
+        await OrderProvider.DispatchOrder(order);
+    }
+
+    private async Task CancelOrder(Order order)
+    {
+        await OrderProvider.CancelOrder(order);
+    }
+
+    private void FilterOrders(OrderStatus status)
+    {
+        selectedFilter = status;
+        selectedOrder = FilteredOrders?.FirstOrDefault();
+    }
+
+    private string GetCellColour(OrderStatus status)
+    {
+        return status switch
+        {
+            OrderStatus.Placed => "table-primary",
+            OrderStatus.Dispatched => "table-success",
+            OrderStatus.Cancelled => "table-danger",
+            _ => ""
+        };
+    }
+
+    private void GoToCustomers()
+    {
+        NavigationManager.NavigateTo("/customers");
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+            await Js.InvokeVoidAsync("addTooltips");
+    }
 }
